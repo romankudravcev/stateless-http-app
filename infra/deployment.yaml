@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: http-app
-          image: romankudravcev/stateless-http:latest
+          image: ghcr.io/romankudravcev/stateless-http-app:latest
           imagePullPolicy: Always
       restartPolicy: Always
 ---
