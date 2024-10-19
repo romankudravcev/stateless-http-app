@@ -1,0 +1,9 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: strip-prefix-middleware
+  namespace: stateless
+spec:
+  stripPrefix:
+    prefixes:
+      - /stateless

@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: http-app
+  labels:
+    app: http-app
+  namespace: stateless
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: http-app
+  template:
+    metadata:
+      name: http-app
+      labels:
+        app: http-app
+    spec:
+      containers:
+        - name: http-app
+          image: romankudravcev/stateless-http:latest
+          imagePullPolicy: Always
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: http-app-service
+  namespace: stateless
+spec:
+  selector:
+    app: http-app
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8080
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: http-app-ingress-route
+  namespace: stateless
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: PathPrefix(`/stateless`)
+      kind: Rule
+      middlewares:
+        - name: strip-prefix-middleware
+      services:
+        - name: http-app-service
+          port: 80
